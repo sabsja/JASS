@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Jass!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            color: #333;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .intro-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+        
+        .intro-content.moved-up {
+            transform: translateY(-100%);
+        }
+        
+        .title {
+            text-align: center;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin: 30px 0;
+            font-style: italic;
+            position: relative;
+            color: white;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+        
+        .from {
+            text-align: center;
+            margin: 20px 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+        
+        .message-button {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 16px 32px;
+            text-align: center;
+            border-radius: 50px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .message-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .message-button:hover::before {
+            left: 100%;
+        }
+        
+        .message-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+        }
+        
+        .message-button:active {
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+        
+        .messages {
+            margin-top: 50px;
+            display: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        
+        .message {
+            margin-bottom: 25px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        
+        .sender {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #667eea;
+            font-size: 1.1rem;
+            padding: 0 15px;
+            padding-top: 15px;
+        }
+        
+        .content {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8f4ff 100%);
+            padding: 15px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            color: #555;
+            border-left: 4px solid #667eea;
+        }
+        
+        .next-section {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px 0;
+        }
+        
+        .next-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            margin: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+        }
+        
+        /* Social Media Icons */
+        .social-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px 0;
+            border-top: 2px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .social-title {
+            color: #667eea;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            text-decoration: none;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.3));
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+        
+        .social-icon:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
+        .telegram {
+            background: linear-gradient(45deg, #0088cc, #00a8e8);
+        }
+        
+        .google-photos {
+            background: linear-gradient(45deg, #4285f4, #ea4335, #fbbc05, #34a853);
+        }
+        
+        .youtube {
+            background: linear-gradient(45deg, #ff0000, #cc0000);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            padding-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .sparkle {
+            font-size: 1.5rem;
+            display: inline-block;
+            animation: sparkle 2s infinite ease-in-out;
+            position: relative;
+        }
+        
+        .sparkle:nth-child(odd) {
+            animation-delay: 0s;
+        }
+        
+        .sparkle:nth-child(even) {
+            animation-delay: 1s;
+        }
+        
+        @keyframes sparkle {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.3) rotate(180deg);
+                opacity: 1;
+            }
+        }
+        
+        /* Photo gallery styles */
+        .photo-gallery {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .photo-placeholder {
+            height: 200px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .photo-placeholder:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Quiz section styles */
+        .quiz-section {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .quiz-question {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .quiz-option {
+            background: #f8f9ff;
+            border: 2px solid #e0e6ff;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .messages {
+                padding: 20px;
+                margin-top: 30px;
+            }
+            
+            .message-button {
+                padding: 14px 24px;
+                font-size: 1rem;
+            }
+            
+            .content {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+            
+            .social-icons {
+                gap: 15px;
+            }
+            
+            .social-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .message-button {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .content {
+                font-size: 0.85rem;
+            }
+            
+            .messages {
+                padding: 15px;
+            }
+            
+            .social-icons {
+                gap: 12px;
+            }
+            
+            .social-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="particles" id="particles"></div>
+        
+        <div class="intro-content" id="introContent">
+            <div class="title">
+                <span class="sparkle">✨</span> HAPPIEST BIRTHDAY JASS!! <span class="sparkle">✨</span>
+            </div>
+            
+            <div class="from">
+                From: VAKENGAME<br>
+                June 21, 2025
+            </div>
+            
+            <div id="messageButton" class="message-button">
+                Click me! 🎉
+            </div>
+            
+            <div class="footer">
+                jassnamaganda ❤️ 
+            </div>
+        </div>
+        
+        <div id="messageContainer" class="messages">
+            <div class="message">
+                <div class="sender">Andrea:</div>
+                <div class="content">
+                    habadutduttt tol! whatever happenz wala ako palagi dyan sa tabi mo eme basta if may gusto kang ilabas dyan im here para makinig(nakikinig bako?? eme) pero just u know gagawin ko sa makakaya ko na ibigay ung best ko when it comes to loving uuu(as a prend syemper). i want na maging long lasting ang pagka friendshipss naten hanggang tumada(grabe) and i really hope na seryoso ung pumunta tayong ibang bansa emesaur tas libre mo hahahaha. abt sa heartbrokeness mo, i hope and pray na whatever circumstances magawa mo sanang mag let go sa mga bagay-bagay na naghohold back sa iyung full potential as a free and happy person. idk what's ur relationship with the Lord, but i also do hope na u talk to Him kasi hindi naman ako perpekk na laging andyan sau, na tulongan ka everyday na bagohin ka in a way for self development, kaya always trust in Him pii hehe. happiest birthday vien lovelotss!
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="sender">Kevin:</div>
+                <div class="content">
+                    Happy birthday jass!, thank you for being a great friend, diba transferee ka noong g10?, I thought talaga noon di Tayo mag kakasundo or di Tayo magiging close pero that's false pala, thank you for being a part of our cof "VAKENGAME", for caring for us, loving us as friends, and being so selfness and thoughtful at the same time, may you continue to grow with that kind of attitude and always remember to never loose hope and never give up in life, me and the gang (Vakengame) will always be in your heart cheering for you!! Happy birthday again! 🎉 🎂
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="sender">Elizabeth:</div>
+                <div class="content">
+                    EME
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="sender">Nicole:</div>
+                <div class="content">
+                    EME
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="sender">Greciah:</div>
+                <div class="content">
+                    hi jass, happy happy birthday to you!! thanks sa unexpected friendship hehe. may u always find joy and purpose in life. may this year be blessed with happy and unforgettable experience and memories, syempre sana kasama vakengame haha. always remember na you are loved not just today but everydayyyy. wishing you all the best in life and goodluck sa last journey natin as highschool student. again, happy birthday. enjoy your dayyyy !!
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="sender">Aquilino:</div>
+                <div class="content">
+                    Happy birthday Jass! I hope na you enjoyed your day naman, and just remember to keep going forward and never give up sa mga goals mo, and just be yourself, we'll be always here for you. Also i hope you enjoy the book (and the lomo cards), i'd love to buy you more ^^!
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="sender">Michaela:</div>
+                <div class="content">
+                    Happy birthday, Jasiee. I'm thankful to be one of your friends. Hindi man tayo masyadong close but I consider you as my sister through heart. I wish you all the best in this world. Whatever problem or challenge come to your life, always remember that VAKENGAME will always stay by your side. I hope you enjoy your special day. We love you so much 💋🫶
+                </div>
+            </div>
+            
+            <div class="message">
+                <div class="sender">Elieza:</div>
+                <div class="content">
+                    EME
+                </div>
+            </div>
+            
+            <div class="next-section">
+                <div class="next-button" onclickp </div>
+                <div class="next-button" onclick="showQuiz()">🎯 Birthday Quiz</div>
+            </div>
+            
+            <!-- Social Media Section -->
+            <div class="social-section">
+                <div class="social-title">💌 Stay Connected</div>
+                <div class="social-icons">
+                    <a href="https://t.me/+TlzT6n95SpgwYzI1" class="social-icon telegram" title="Telegram">
+                        ✈️
+                    </a>
+                    <a href="https://photos.app.goo.gl/V318RGLQgZqc2dFYA" class="social-icon google-photos" title="Google Photos">
+                        📷
+                    </a>
+                    <a href="https://m.me/j/Abbqydg97ZzxTzNg/" class="social-icon messenger" title="Messenger">
+🗨️
+                    </a>
+                </div>
+            </div>
+            </div>
+            
+            <!-- Quiz Section -->
+            <div id="quizSection" class="quiz-section">
+                <h3 style="color: #667eea; margin-bottom: 20px;">🎯HABADUU</h3>
+                <div class="quiz-question">Since when ko to pinag pre-pare para sau?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="quizAnswer(this, false)">Since Birth 💙</div>
+                    <div class="quiz-option" onclick="quizAnswer(this, false)">Last Year 🧡</div>
+                    <div class="quiz-option" onclick="quizAnswer(this, true)">Vacation time sa Visayas 🤎</div>
+                    <div class="quiz-option" onclick="quizAnswer(this, false)">This week 💚</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio element for background music -->
+    <audio id="bgMusic" loop>
+        <source src="/jsv/Dahil Minahal Mo Ako-yt.savetube.me.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+            
+    <script>
+      // Create floating particles background
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random horizontal position
+                const left = Math.random() * 100;
+                
+                // Random animation delay
+                const delay = Math.random() * 6;
+                
+                // Random size
+                const size = 2 + Math.random() * 4;
+                
+                particle.style.left = `${left}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particles.appendChild(particle);
+            }
+        }
+        
+        // Confetti animation function
+        function createConfetti() {
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff', '#5f27cd', '#00d2d3', '#ff9f43'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-20px';
+                confetti.style.zIndex = '1000';
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                confetti.style.pointerEvents = 'none';
+                
+                document.body.appendChild(confetti);
+                
+                // Animate confetti falling
+                const animation = confetti.animate([
+                    { 
+                        transform: 'translateY(0) rotateZ(0deg)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translateY(${window.innerHeight + 100}px) rotateZ(${Math.random() * 360}deg)`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: 3000 + Math.random() * 3000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+                
+                animation.onfinish = () => {
+                    if (confetti.parentNode) {
+                        confetti.remove();
+                    }
+                };
+            }
+        }
+        
+        // Get elements
+        const messageButton = document.getElementById('messageButton');
+        const messageContainer = document.getElementById('messageContainer');
+        const messages = document.querySelectorAll('.message');
+        const introContent = document.getElementById('introContent');
+        const bgMusic = document.getElementById('bgMusic');
+        
+        // Main button click handler
+        messageButton.addEventListener('click', function() {
+            // Create confetti effect immediately
+            createConfetti();
+            
+            introContent.classList.add('moved-up');
+            
+            // Start music
+            bgMusic.play().catch(e => {
+                console.log("Auto-play prevented. User needs to interact with the page first.");
+            });
+            
+            // Show messages with animation
+            setTimeout(() => {
+                messageContainer.style.display = 'block';
+                setTimeout(() => {
+                    messageContainer.style.opacity = 1;
+                    messageButton.textContent = 'Loading magic... ✨';
+                    
+                    // Animate each message
+                    messages.forEach((message, index) => {
+                        setTimeout(() => {
+                            message.style.opacity = 1;
+                            message.style.transform = 'translateY(0)';
+                        }, 200 * index);
+                    });
+                }, 100);
+            }, 500);
+        });
+        
+        // Next button functions
+        function showPhotos() {
+            const photoGallery = document.getElementById('photoGallery');
+            photoGallery.style.display = photoGallery.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        function showQuiz() {
+            const quizSection = document.getElementById('quizSection');
+            quizSection.style.display = quizSection.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        function quizAnswer(element, isCorrect) {
+            if (isCorrect) {
+                element.style.background = '#4CAF50';
+                element.style.color = 'white';
+                element.innerHTML = '✅ Correct! Dahil jan may piso kasaken!🤎';
+            } else {
+                element.style.background = '#f44336';
+                element.style.color = 'white';
+                element.innerHTML = '❌ Try again!';
+            }
+        }
+        
+        // Initialize effects
+        window.addEventListener('load', () => {
+            createParticles();
+        });
+        
+        // Music control
+        document.addEventListener('click', function() {
+            bgMusic.play().catch(e => {
+                console.log("Couldn't play on click");
+            });
+        });
+    </script>
+</body>
+</html>
